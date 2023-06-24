@@ -9,6 +9,8 @@ on:
 jobs:
   deploy-gh-pages:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
     steps:
