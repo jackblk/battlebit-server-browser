@@ -18,7 +18,7 @@ jobs:
           node-version: "18"
 
       - name: Build
-        run:
+        run: |
           yarn
           yarn build
 
