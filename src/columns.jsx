@@ -10,6 +10,32 @@ export const tableColumns = [
     sorter: (a, b) => a.Name.localeCompare(b.Name),
   },
   {
+    title: startCase(serverListKeys.region),
+    dataIndex: serverListKeys.region,
+    key: serverListKeys.region,
+    sorter: (a, b) => a.Region.localeCompare(b.Region),
+    render: (_, record) => {
+      const { Region } = record;
+      return <Tag>{Region}</Tag>;
+    },
+  },
+  {
+    title: startCase(serverListKeys.gamemode),
+    dataIndex: serverListKeys.gamemode,
+    key: serverListKeys.gamemode,
+    sorter: (a, b) => a.Gamemode.localeCompare(b.Gamemode),
+  },
+  {
+    title: startCase(serverListKeys.playersStatus),
+    dataIndex: serverListKeys.playersStatus,
+    key: serverListKeys.playersStatus,
+    sorter: (a, b) => a.Players - b.Players,
+    render: (_, record) => {
+      const { statusColor, PlayersStatus } = record;
+      return <Tag color={statusColor}>{PlayersStatus}</Tag>;
+    },
+  },
+  {
     title: startCase(serverListKeys.map),
     dataIndex: serverListKeys.map,
     key: serverListKeys.map,
@@ -43,29 +69,14 @@ export const tableColumns = [
     },
   },
   {
-    title: startCase(serverListKeys.gamemode),
-    dataIndex: serverListKeys.gamemode,
-    key: serverListKeys.gamemode,
-    sorter: (a, b) => a.Gamemode.localeCompare(b.Gamemode),
-  },
-  {
-    title: startCase(serverListKeys.region),
-    dataIndex: serverListKeys.region,
-    key: serverListKeys.region,
-    sorter: (a, b) => a.Region.localeCompare(b.Region),
+    title: "Day/Night",
+    dataIndex: serverListKeys.dayNight,
+    key: serverListKeys.dayNight,
+    sorter: (a, b) => a.DayNight.localeCompare(b.DayNight),
     render: (_, record) => {
-      const { Region } = record;
-      return <Tag>{Region}</Tag>;
-    },
-  },
-  {
-    title: startCase(serverListKeys.players),
-    dataIndex: serverListKeys.playersStatus,
-    key: serverListKeys.playersStatus,
-    sorter: (a, b) => a.Players - b.Players,
-    render: (_, record) => {
-      const { statusColor, PlayersStatus } = record;
-      return <Tag color={statusColor}>{PlayersStatus}</Tag>;
+      const { DayNight } = record;
+      const dayFlag = DayNight.toLowerCase().includes("day");
+      return <Tag color={dayFlag ? "orange" : "blue"}>{DayNight}</Tag>;
     },
   },
   {
@@ -80,17 +91,6 @@ export const tableColumns = [
       if (HzNum < 60) color = "red";
       if (HzNum >= 120) color = "green";
       return <Tag color={color}>{Hz}</Tag>;
-    },
-  },
-  {
-    title: "Day/Night",
-    dataIndex: serverListKeys.dayNight,
-    key: serverListKeys.dayNight,
-    sorter: (a, b) => a.DayNight.localeCompare(b.DayNight),
-    render: (_, record) => {
-      const { DayNight } = record;
-      const dayFlag = DayNight.toLowerCase().includes("day");
-      return <Tag color={dayFlag ? "orange" : "blue"}>{DayNight}</Tag>;
     },
   },
   {
