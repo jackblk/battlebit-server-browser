@@ -48,7 +48,7 @@ export const tableColumns = [
     },
   },
   {
-    title: startCase(serverListKeys.queuePlayers),
+    title: startCase(serverListKeys.hz),
     dataIndex: serverListKeys.hz,
     key: serverListKeys.hz,
     sorter: (a, b) => a.Hz - b.Hz,
