@@ -119,8 +119,16 @@ const App = () => {
             dataSource={filteredServerList}
             columns={tableColumns}
             rowKey="key"
-            pagination={false}
-            scroll={{ x: "40" }}
+            pagination={{
+              defaultPageSize: 10,
+              hideOnSinglePage: true,
+              position: ["bottomCenter", "topCenter"],
+            }}
+            scroll={{
+              x: "40",
+              //
+              // y: "calc(100vh - 300px)",
+            }}
           />
         </Content>
       </Layout>
