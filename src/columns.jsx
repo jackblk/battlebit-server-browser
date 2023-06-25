@@ -20,6 +20,27 @@ export const tableColumns = [
     dataIndex: serverListKeys.mapSize,
     key: serverListKeys.mapSize,
     sorter: (a, b) => a.MapSize.localeCompare(b.MapSize),
+    render: (_, record) => {
+      const { MapSize } = record;
+      let color = "";
+      switch (MapSize.toLowerCase()) {
+        case "small":
+          color = "green";
+          break;
+        case "medium":
+          color = "blue";
+          break;
+        case "big":
+          color = "orange";
+          break;
+        case "ultra":
+          color = "magenta";
+          break;
+        default:
+          color = "";
+      }
+      return <Tag color={color}>{MapSize}</Tag>;
+    },
   },
   {
     title: startCase(serverListKeys.gamemode),
