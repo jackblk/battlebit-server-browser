@@ -15,12 +15,12 @@ const getStyles = () => ({
     },
   },
   headerRight: {
-    button: {
-      color: "#fff",
-      // Update with your desired button text color
-      backgroundColor: "transparent",
-      border: "none",
-    },
+    // button: {
+    //   color: "#fff",
+    //   // Update with your desired button text color
+    //   backgroundColor: "transparent",
+    //   border: "none",
+    // },
   },
 });
 

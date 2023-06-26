@@ -22,7 +22,9 @@ const App = () => {
   const [serverList, setServerList] = useState([]);
   const [filteredServerList, setFilteredServerList] = useState([]);
   const [filters, setFilters] = useState({});
-  const [autoRefresh, setAutoRefresh] = useState(false);
+  const [autoRefresh, setAutoRefresh] = useState(
+    localStorage.getItem(LOCAL_STORAGE_KEYS.autoRefresh) === "true"
+  );
   const [themeMode, setThemeMode] = useState(
     localStorage.getItem(LOCAL_STORAGE_KEYS.themeMode) || "default"
   );
@@ -71,8 +73,13 @@ const App = () => {
     );
   }, [filters]);
 
+  const handleSetAutoRefresh = (event) => {
+    const value = event.target.checked;
+    localStorage.setItem(LOCAL_STORAGE_KEYS.autoRefresh, String(value));
+    setAutoRefresh(value);
+  };
+
   const applyFilters = (serverList, newFilters) => {
-    console.log("newFilters-------", newFilters);
     setFilters(newFilters);
     const filteredData = serverList.filter((server) => {
       return Object.entries(newFilters).every(([filterKey, filterValues]) => {
@@ -128,9 +135,9 @@ const App = () => {
             </Button>
             <Checkbox
               checked={autoRefresh}
-              onChange={(event) => setAutoRefresh(event.target.checked)}
+              onChange={(event) => handleSetAutoRefresh(event)}
             >
-              Auto Refresh
+              <div style={{ color: "white" }}>Auto Refresh</div>
             </Checkbox>
             <ThemeToggle themeMode={themeMode} toggleTheme={toggleTheme} />
           </Space>
