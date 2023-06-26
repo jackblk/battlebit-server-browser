@@ -33,6 +33,8 @@ export async function fetchServerList() {
     FRONTLINE: "Frontline",
     CashRun: "Cash Run",
     INFCONQ: "Infantry Conquest",
+    TDM: "Team Deathmatch",
+    GunGameFFA: "Gun Game Free For All",
   };
   const flagMapping = {
     america: "🇺🇸",
