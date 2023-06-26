@@ -1,5 +1,13 @@
-import { useEffect, useState } from "react";
-import { Table, ConfigProvider, theme, Layout } from "antd";
+import { useCallback, useEffect, useState } from "react";
+import {
+  Table,
+  ConfigProvider,
+  theme,
+  Layout,
+  Button,
+  Space,
+  Checkbox,
+} from "antd";
 import { fetchServerList, serverListKeys } from "./api";
 import { tableColumns } from "./columns";
 import ServerFilters from "./components/ServerFilters";
@@ -14,27 +22,38 @@ const App = () => {
   const [serverList, setServerList] = useState([]);
   const [filteredServerList, setFilteredServerList] = useState([]);
   const [filters, setFilters] = useState({});
+  const [autoRefresh, setAutoRefresh] = useState(false);
   const [themeMode, setThemeMode] = useState(
     localStorage.getItem(LOCAL_STORAGE_KEYS.themeMode) || "default"
   );
   const [resetFilterKey, setResetFilterKey] = useState(0); // State for resetting ServerFilters
   const styles = getStyles(themeMode);
 
-  useEffect(() => {
-    async function fetchData() {
-      const data = await fetchServerList();
-      setServerList(data);
-      setFilteredServerList(data);
-      const savedFilters = localStorage.getItem(
-        LOCAL_STORAGE_KEYS.savedFilters
-      );
-      if (savedFilters) {
-        const newFilters = { ...JSON.parse(savedFilters) };
-        applyFilters(data, newFilters);
-      }
+  const refreshData = useCallback(async () => {
+    const data = await fetchServerList();
+    setServerList(data);
+    setFilteredServerList(data);
+    const savedFilters = localStorage.getItem(LOCAL_STORAGE_KEYS.savedFilters);
+    if (savedFilters) {
+      const newFilters = { ...JSON.parse(savedFilters) };
+      applyFilters(data, newFilters);
     }
-    fetchData();
   }, []);
+
+  useEffect(() => {
+    refreshData();
+  }, [refreshData]);
+
+  useEffect(() => {
+    if (autoRefresh) {
+      refreshData(); // Initial refresh
+      const intervalId = setInterval(() => {
+        refreshData();
+      }, 5000); // 5 seconds
+
+      return () => clearInterval(intervalId);
+    }
+  }, [autoRefresh, refreshData]);
 
   useEffect(() => {
     // Save filters to local storage
@@ -102,9 +121,19 @@ const App = () => {
           <div style={styles.headerLeft}>
             <h1>Battlebit Server Browser</h1>
           </div>
-          <div style={styles.headerRight}>
+
+          <Space style={styles.headerRight}>
+            <Button type="primary" onClick={refreshData}>
+              Refresh
+            </Button>
+            <Checkbox
+              checked={autoRefresh}
+              onChange={(event) => setAutoRefresh(event.target.checked)}
+            >
+              Auto Refresh
+            </Checkbox>
             <ThemeToggle themeMode={themeMode} toggleTheme={toggleTheme} />
-          </div>
+          </Space>
         </Header>
         <Content style={styles.content}>
           <ServerFilters
