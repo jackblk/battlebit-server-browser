@@ -87,10 +87,11 @@ export const tableColumns = [
     render: (_, record) => {
       const { Hz } = record;
       const HzNum = Number(Hz);
-      let color = "";
+      let color = ""; // default for 60
       if (HzNum < 60) color = "red";
-      if (HzNum >= 120) color = "green";
-      return <Tag color={color}>{Hz}</Tag>;
+      if (HzNum > 60 && HzNum <= 144) color = "blue";
+      if (HzNum > 144) color = "green";
+      return <Tag color={color}>{HzNum}</Tag>;
     },
   },
   {
