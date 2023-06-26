@@ -56,8 +56,14 @@ const ServerFilters = ({
     if (!serverList || serverList.length === 0) {
       return []; // Return an empty array if serverList is undefined, null, or empty
     }
-
-    return Array.from(new Set(serverList.map((server) => server[field])));
+    return Array.from(new Set(serverList.map((server) => server[field]))).sort(
+      function (a, b) {
+        if (!isNaN(a) && !isNaN(b)) {
+          return a - b;
+        }
+        return a.localeCompare(b);
+      }
+    );
   };
 
   return (
