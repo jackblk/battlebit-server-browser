@@ -1,13 +1,16 @@
-import { Button } from "antd";
+import { Switch } from "antd";
 import { BsSun, BsMoon } from "react-icons/bs";
 
 const ThemeToggle = ({ themeMode, toggleTheme }) => {
-  const renderButtonIcon = () => {
-    return themeMode === "default" ? <BsSun /> : <BsMoon />;
-  };
-
+  const isDarkTheme = themeMode.toLowerCase() === "dark";
   return (
-    <Button type="primary" onClick={toggleTheme} icon={renderButtonIcon()} />
+    <Switch
+      id="themeToggle"
+      checked={isDarkTheme}
+      onChange={toggleTheme}
+      checkedChildren={<BsMoon />}
+      unCheckedChildren={<BsSun />}
+    />
   );
 };
 
