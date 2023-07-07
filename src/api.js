@@ -56,7 +56,7 @@ export async function fetchServerList() {
     // New column for server status (players, queue, max players)
     server.PlayersStatus =
       server.QueuePlayers > 0
-        ? `${server.Players}[${server.QueuePlayers}]/${server.MaxPlayers}`
+        ? `${server.Players}[+${server.QueuePlayers}]/${server.MaxPlayers}`
         : `${server.Players}/${server.MaxPlayers}`;
 
     // Data for server status color
