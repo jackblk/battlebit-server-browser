@@ -7,6 +7,12 @@ const gamemodeMapping = {
   DOMI: "Domination",
   FRONTLINE: "Frontline",
   GunGameFFA: "Gun Game Free For All",
+  GunGameTeam: "GunG ame Team",
+  FFA:"FFA",
+  ELI:"Elimiation",
+  CatchGame:"Catch Hide",
+  SuicideRush:"Suicide Rush",
+  Infected:"Infected",
   INFCONQ: "Infantry Conquest",
   RUSH: "Rush",
   TDM: "Team Deathmatch",
@@ -15,16 +21,14 @@ const gamemodeMapping = {
 
 function addFlagToRegion(region) {
   const flagMapping = {
-    asia: "🌏",
-    africa: "🌍",
-    america: "🇺🇸",
-    australia: "🇦🇺",
-    brazil: "🇧🇷",
-    developer: "( ͡° ͜ʖ ͡°)",
-    europe: "🇪🇺",
-    japan: "🇯🇵",
-    singapore: "🇸🇬",
-    vietnam: "🇻🇳",
+    america: "",
+    australia: "",
+    brazil: "",
+    europe: "",
+    japan: "",
+    africa:"",
+    asia: "",
+    developer:"",
   };
 
   const lowerRegion = region.toLowerCase();
@@ -81,9 +85,15 @@ export async function fetchServerList() {
 
     // Data for server status color
     if (server.Players + server.QueuePlayers === server.MaxPlayers) {
+      server.statusColor = "magenta";
+    } else if (server.Players + server.QueuePlayers >= server.MaxPlayers * 0.85) {
       server.statusColor = "red";
-    } else if (server.Players + server.QueuePlayers >= 0) {
+    } else if (server.Players + server.QueuePlayers >= server.MaxPlayers * 0.70) {
+      server.statusColor = "orange";
+    } else if (server.Players + server.QueuePlayers >= server.MaxPlayers * 0.50) {
       server.statusColor = "green";
+    } else if (server.Players + server.QueuePlayers >= server.MaxPlayers * 0.25) {
+      server.statusColor = "blue";
     } else {
       server.statusColor = "";
     }
@@ -103,16 +113,27 @@ export async function fetchServerList() {
 
     // Day/Night mapping
     if (server.DayNight.toLowerCase() === "day") {
-      server.DayNight = "☀️ " + server.DayNight;
+      server.DayNight = " " + server.DayNight;
     } else if (server.DayNight.toLowerCase() === "night") {
-      server.DayNight = "🌙 " + server.DayNight;
+      server.DayNight = " " + server.DayNight;
     }
 
     // HasPassword mapping
     if (server.HasPassword.toLowerCase() === "yes") {
-      server.HasPassword = "🔒 " + server.HasPassword;
+      server.HasPassword = " " + server.HasPassword;
+    }
+    
+    // 计算区服内玩家的总数
+    const totalPlayers = server.Players + server.QueuePlayers;
+    if (regionCounts[server.Region]) {
+        regionCounts[server.Region] += totalPlayers;
+    } else {
+        regionCounts[server.Region] = totalPlayers;
     }
   });
+  const res = {
+    data,
+    regionCounts
+  }
 
-  return data;
-}
+  return res;
