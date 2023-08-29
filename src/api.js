@@ -31,6 +31,8 @@ function addFlagToRegion(region) {
     developer:"",
   };
 
+  const regionCounts = {};
+
   const lowerRegion = region.toLowerCase();
   for (const key in flagMapping) {
     const lowerKey = key.toLowerCase();
@@ -137,3 +139,4 @@ export async function fetchServerList() {
   }
 
   return res;
+}
