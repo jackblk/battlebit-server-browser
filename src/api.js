@@ -1,5 +1,44 @@
 import { startCase } from "lodash";
 
+const gamemodeMapping = {
+  CashRun: "Cash Run",
+  CaptureTheFlag: "Capture The Flag",
+  CONQ: "Conquest",
+  DOMI: "Domination",
+  FRONTLINE: "Frontline",
+  GunGameFFA: "Gun Game Free For All",
+  INFCONQ: "Infantry Conquest",
+  RUSH: "Rush",
+  TDM: "Team Deathmatch",
+  VoxelFortify: "Voxel Fortify",
+};
+
+function addFlagToRegion(region) {
+  const flagMapping = {
+    asia: "🌏",
+    africa: "🌍",
+    america: "🇺🇸",
+    australia: "🇦🇺",
+    brazil: "🇧🇷",
+    developer: "( ͡° ͜ʖ ͡°)",
+    europe: "🇪🇺",
+    japan: "🇯🇵",
+    singapore: "🇸🇬",
+    vietnam: "🇻🇳",
+  };
+
+  const lowerRegion = region.toLowerCase();
+  for (const key in flagMapping) {
+    const lowerKey = key.toLowerCase();
+    if (lowerRegion.includes(lowerKey)) {
+      const flag = flagMapping[key];
+      return `${flag} ${startCase(region)}`;
+    }
+  }
+
+  return startCase(region); // If no matching key found
+}
+
 export const serverListKeys = {
   name: "Name",
   map: "Map",
@@ -26,25 +65,6 @@ export async function fetchServerList() {
     "https://publicapi.battlebit.cloud/Servers/GetServerList"
   );
   const data = await response.json();
-  const gamemodeMapping = {
-    DOMI: "Domination",
-    CONQ: "Conquest",
-    RUSH: "Rush",
-    FRONTLINE: "Frontline",
-    CashRun: "Cash Run",
-    INFCONQ: "Infantry Conquest",
-    TDM: "Team Deathmatch",
-    GunGameFFA: "Gun Game Free For All",
-  };
-  const flagMapping = {
-    america: "🇺🇸",
-    australia: "🇦🇺",
-    brazil: "🇧🇷",
-    europe: "🇪🇺",
-    japan: "🇯🇵",
-    singapore: "🇸🇬",
-    vietnam: "🇻🇳",
-  };
 
   data.forEach((server) => {
     server.key = `${server.Name}_${server.Region}_${server.Map}`;
@@ -69,21 +89,17 @@ export async function fetchServerList() {
     }
 
     // Gamemode mapping
-    Object.keys(gamemodeMapping).forEach((key) => {
-      if (String(server.Gamemode).toLowerCase() === key.toLowerCase()) {
-        server.Gamemode = gamemodeMapping[key];
-      }
-    });
+    if (Object.keys(gamemodeMapping).includes(server.Gamemode)) {
+      server.Gamemode = gamemodeMapping[server.Gamemode];
+    } else {
+      server.Gamemode = startCase(server.Gamemode);
+    }
 
     // Map name formatting
     server.Map = startCase(server.Map);
 
     // Flag mapping
-    Object.keys(flagMapping).forEach((key) => {
-      if (String(server.Region).toLowerCase().includes(key)) {
-        server.Region = flagMapping[key] + " " + startCase(server.Region);
-      }
-    });
+    server.Region = addFlagToRegion(server.Region);
 
     // Day/Night mapping
     if (server.DayNight.toLowerCase() === "day") {
