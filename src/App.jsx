@@ -30,16 +30,22 @@ const App = () => {
   );
   const [resetFilterKey, setResetFilterKey] = useState(0); // State for resetting ServerFilters
   const styles = getStyles(themeMode);
+  const [regionCounts, setregionCounts] = useState([]);
 
   const refreshData = useCallback(async () => {
     const data = await fetchServerList();
-    setServerList(data);
-    setFilteredServerList(data);
+    setServerList(res.data);
+    setFilteredServerList(res.data);
     const savedFilters = localStorage.getItem(LOCAL_STORAGE_KEYS.savedFilters);
     if (savedFilters) {
       const newFilters = { ...JSON.parse(savedFilters) };
-      applyFilters(data, newFilters);
+      applyFilters(res.data, newFilters);
     }
+    var result = []
+    for(const key in res.regionCounts){
+      result.push({region:key,counts:res.regionCounts[key]})
+    }
+    setregionCounts(result) 
   }, []);
 
   useEffect(() => {
@@ -149,6 +155,15 @@ const App = () => {
             onFilterChange={handleFilterChange}
             onClearFilters={handleClearFilters}
             filters={filters}
+          />
+          <List
+            grid={{ gutter: 16, column: 4 }}
+            dataSource={regionCounts}
+            renderItem={(item) => (
+              <List.Item>
+                <Card title={item.region} headStyle ={{fontSize: 24, textAlign:"center"}} bodyStyle={{ fontSize: 18, textAlign:"center" }}>{item.counts}</Card>
+              </List.Item>
+            )}
           />
 
           <Table
